@@ -186,4 +186,5 @@ while True:
         #print('성공')
         print(level+1)
         break
+    print(maps)
     level += 1 
