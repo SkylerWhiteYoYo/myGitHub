@@ -46,11 +46,10 @@ def return_head_loc():
 cur_dir = 0
 len_tail = 0
 remove_tail_array = []
-def track_tail():
+def register_tail(x,y):
     global remove_tail_array
     global tick
     global len_tail
-    x,y = return_head_loc
     remove_tail_array.append([tick+len_tail,x,y])
 def remove_tail_by_tick():
     global tick
@@ -60,6 +59,10 @@ def remove_tail_by_tick():
             x = remove_tail_array[i][1]
             y = remove_tail_array[i][2]
             change_thing(x,y,'.')
+def extend_tail_life():
+    global remove_tail_array
+    for i in range(len(remove_tail_array)):
+        remove_tail_array[i][0] += 1
         
        
     
@@ -103,13 +106,14 @@ def move_head():
         return
     if board[row-1][col-1] == 'A':
         len_tail += 1
+        extend_tail_life()
         print('사과를 먹음')
     
     change_thing(row,col,'H')
 
     if len_tail > 0:
         change_thing(pre_row,pre_col,'S')
-        remove_tail(return_head_loc)
+        register_tail(pre_row,pre_col)
     elif len_tail == 0:
         change_thing(pre_row,pre_col,'.')
    
@@ -126,7 +130,10 @@ while is_game_running:
                 cur_dir += 1
     #TODO:지나간 틱은 지워야함 
     move_head()
-    
+    remove_tail_by_tick()
+    print(remove_tail_array)
     tick +=1
+    if is_game_running==False:
+        print(tick)
     print_board(board)
     print()
